@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Cart</title>
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" />
+  
+  <!-- <link rel="stylesheet" href="/stylesheets/style.css"> -->
+  <style>
+    /* General Styles */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #262323;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      color: #000000; /* Default text color */
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    /* Navigation Bar Styles */
+    .navbar {
+      background-color: #000; /* Dark background */
+      padding: 10px 0;
+      display: flex;
+      justify-content: space-between; /* Align items horizontally */
+      align-items: center; /* Center items vertically */
+    }
+
+    .navbar h1 {
+      margin: 0;
+      padding: 0;
+      font-size: 40px;
+      color: #ffffff; /* White color */
+    }
+
+    .navbar ul {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      align-items: center;
+    }
+
+    .navbar ul li {
+      margin-left: 20px; /* Adjusted margin to separate items */
+    }
+
+    .navbar ul li:first-child {
+      margin-left: auto; /* Pushes all li items to the right */
+    }
+
+    .navbar ul li a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 18px;
+      transition: color 0.3s; /* Smooth color transition */
+    }
+
+    .navbar ul li a:hover {
+      color: #ccc; /* Light grey on hover */
+    }
+
+    /* Other existing styles */
+    .bill {
+      width: 50%;
+      margin-top: 6.5vh;
+      margin-bottom: 12vh;
+      margin-left: 42vh;
+      border: 1px solid #ccc;
+      padding: 20px;
+      background-color: #f9f9f9;
+      border-radius: 8px;
+    }
+
+    .bill-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .bill-header h1 {
+      font-size: 24px;
+      margin: 0;
+    }
+
+    .cart-items {
+      margin-bottom: 20px;
+    }
+
+    .cart-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #ccc;
+    }
+
+    .cart-item img {
+      max-width: 100px;
+      height: auto;
+      margin-right: 20px;
+    }
+
+    .cart-item-details {
+      flex: 1;
+    }
+
+    .cart-item-details h2 {
+      margin: 0;
+      font-size: 18px;
+    }
+
+    .cart-item-details p {
+      margin: 5px 0;
+    }
+
+    .subtotal {
+      text-align: right;
+      font-weight: bold;
+      margin-top: 10px; /* Space between subtotal and button */
+    }
+
+    .remove-item {
+      display: inline-block;
+      text-decoration: none;
+      color: #000; /* Black text color */
+      background-color: #ccc; /* Grey background color */
+      padding: 6px 12px; /* Adjust padding for button size */
+      border-radius: 3px;
+      margin-left: 2px; /* Left margin for spacing */
+      font-size: 14px; /* Smaller font size */
+    }
+
+    .total-price {
+      text-align: right;
+      margin-top: 20px;
+      font-size: 20px;
+    }
+
+    .proceed-to-pay {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .proceed-to-pay a {
+      display: inline-block;
+      text-decoration: none;
+      color: #fff;
+      background-color: #007bff; /* Button color */
+      padding: 10px 20px; /* Adjust padding for button size */
+      border-radius: 5px;
+      font-size: 18px; /* Button font size */
+      transition: background-color 0.3s ease;
+      cursor: pointer;
+    }
+
+    .proceed-to-pay a:hover {
+      background-color: #0056b3; /* Darker color on hover */
+    }
+
+    /* Modal Styles */
+    .modal {
+      display: none; /* Hidden by default */
+      position: fixed; /* Stay in place */
+      z-index: 1; /* Sit on top */
+      left: 0;
+      top: 0;
+      width: 100%; /* Full width */
+      height: 100%; /* Full height */
+      overflow: auto; /* Enable scroll if needed */
+      background-color: rgb(0,0,0); /* Fallback color */
+      background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    }
+
+    .modal-content {
+      background-color: #000000;
+      color: #ffffff;
+      margin: 15% auto; /* 15% from the top and centered */
+      padding: 20px;
+      border: 1px solid #000000;
+      width: 80%; /* Could be more or less, depending on screen size */
+      max-width: 500px; /* Maximum width */
+      border-radius: 10px; /* Rounded corners */
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      align-content: space-evenly;
+      position: relative;
+    }
+
+    .close {
+      color: #ffffff;
+      font-size: 28px;
+      font-weight: bold;
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      cursor: pointer;
+    }
+
+    .close:hover,
+    .close:focus {
+      color: #949393;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .modal-header,
+    .modal-footer {
+      padding: 10px;
+      text-align: center;
+    }
+
+    .modal-body {
+      padding: 20px;
+    }
+
+    .modal-footer button {
+      background-color: #9c9d9f; /* Button color */
+      color: rgb(0, 0, 0);
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .modal-footer button:hover {
+      background-color: #949393; /* Darker color on hover */
+    }
+
+    /* Blurred background class */
+    .blurred {
+      filter: blur(5px);
+      pointer-events: none; /* Disable interactions */
+    }
+
+    /* Footer Styles */
+    .footer {
+      background-color: #000;
+      color: #fff;
+      text-align: center;
+      padding: 10px 0;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+    }
+
+    .footer p {
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Navigation Bar -->
+<nav class="navbar">
+  <div class="container" style="display: flex;">
+    <h1 style="margin-right: 600px;">Food <span style="color: #fa1414;">Shop</span></h1>
+    <ul>
+      <li><a href="/profile">Home</a></li>
+      <li><a href="#">Menu</a></li>
+      <li><a href="#">About</a></li>
+      <li><a href="#">Contact</a></li>
+      
+      <li> <!-- Changed from <a> to <li> -->
+        <a href="/logout">
+          <i class="fas fa-sign-out-alt"></i> Logout
+        </a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<!-- Main Content: Your Cart -->
+<div class="main-content">
+  <div class="bill">
+    <div class="bill-header">
+      <h1>Your Cart</h1>
+      <p>Date: <%= new Date().toLocaleDateString() %></p>
+    </div>
+    <div class="cart-items">
+      <% if (user.posts.length === 0) { %>
+        <p>Your cart is empty.</p>
+      <% } else { %>
+        <% let totalPrice = 0; %>
+        <% user.posts.forEach(function(item) { %>
+          <% const subtotal = item.price * item.quantity; %>
+          <div class="cart-item">
+            <img src="<%= item.image %>" alt="<%= item.name %>">
+            <div class="cart-item-details">
+              <h2><%= item.name %></h2>
+              <p>Price: $<%= item.price %></p>
+              <p>Quantity: <%= item.quantity %></p>
+            </div>
+            <div class="subtotal">
+              Subtotal: $<%= subtotal.toFixed(2) %>
+            </div>
+            <div>
+              <form action="/removefromcart/<%= item._id %>" method="POST">
+                <button type="submit" class="remove-item">Remove</button>
+              </form>
+            </div>
+          </div>
+          <% totalPrice += subtotal; %>
+        <% }) %>
+        <div class="total-price">
+          <h2>Total: $<%= totalPrice.toFixed(2) %></h2>
+        </div>
+      <% } %>
+    </div>
+    <div class="proceed-to-pay">
+      <a class="button" id="proceed-to-pay">Proceed to Pay</a>
+    </div>
+    
+  </div>
+</div>
+
+<!-- The Modal -->
+<div id="paymentModal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <span class="close">&times;</span>
+      <h2>PAYMENT</h2>
+    </div>
+    <div class="modal-body">
+      <form id="paymentForm">
+        <div>
+          <label for="cardNumber">Card Number:</label>&nbsp;
+          <input type="text" id="cardNumber" name="cardNumber" required><br>
+        </div>
+        <br>
+        <div>
+          <label for="expiryDate">Expiry Date:</label>&nbsp;&nbsp;&nbsp;&nbsp;
+          <input type="text" id="expiryDate" name="expiryDate" required>
+        </div>
+        <br>
+        <div>
+          <label for="cvv">CVV Number:</label>&nbsp;&nbsp;
+          <input type="text" id="cvv" name="cvv" required><br>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button type="submit" form="paymentForm">Submit Payment</button>
+    </div>
+  </div>
+</div>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="container">
+    <p>&copy; 2024 Food Shop. All rights reserved.</p>
+    <!-- Add more footer content like social media links or additional information -->
+  </div>
+</footer>
+
+<script>
+  // Get the modal
+  var modal = document.getElementById("paymentModal");
+
+  // Get the button that opens the modal
+  var btn = document.getElementById("proceed-to-pay");
+
+  // Get the <span> element that closes the modal
+  var span = document.getElementsByClassName("close")[0];
+
+  // Main content
+  var mainContent = document.getElementsByClassName("main-content")[0];
+
+  // When the user clicks the button, open the modal and blur the background
+  btn.onclick = function() {
+    modal.style.display = "block";
+    mainContent.classList.add("blurred");
+  }
+
+  // When the user clicks on <span> (x), close the modal and remove blur
+  span.onclick = function() {
+    modal.style.display = "none";
+    mainContent.classList.remove("blurred");
+  }
+
+  // When the user clicks anywhere outside of the modal, close it and remove blur
+  window.onclick = function(event) {
+    if (event.target == modal) {
+      modal.style.display = "none";
+      mainContent.classList.remove("blurred");
+    }
+  }
+
+  // Handle form submission
+  document.getElementById('paymentForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+    // Add your payment processing code here
+    alert('Payment submitted');
+    modal.style.display = "none";
+    mainContent.classList.remove("blurred");
+  });
+</script>
+
+</body>
+</html>
